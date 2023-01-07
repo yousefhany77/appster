@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-}
+  experimental: {
+    appDir: true,
+  },
+  reactStrictMode: false,
+  modularizeImports: {
+    "@acme/ui": {
+      transform: "@acme/ui/dist/{{member}}",
+    },
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
