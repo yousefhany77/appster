@@ -2,8 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+.ql-container {
+  min-height: 10rem !important;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-container.ql-snow .ql-editor {
+  min-height: 10rem !important;
+  border: 1px solid #29292928 !important;
+  border-radius: 5px !important;
+  cursor: text !important;
+  max-height: 30rem !important;
+}
+.ql-container.ql-snow .ql-editor h1 {
+  font-size: 1.5rem !important;
+}
+.ql-container.ql-snow .ql-editor h2 {
+  font-size: 1.25rem !important;
+}
+.ql-container.ql-snow .ql-editor h3 {
+  font-size: 1.1rem !important;
+}
+.ql-container.ql-snow .ql-editor h4 {
+  font-size: 1rem !important;
+}
+.ql-container.ql-snow .ql-editor h5 {
+  font-size: 0.875rem !important;
+}
+.ql-container.ql-snow .ql-editor h6 {
+  font-size: 0.75rem !important;
+}
+.ql-container.ql-snow .ql-editor p {
+  font-size: 1rem !important;
+}
+.ql-container.ql-snow .ql-editor ol {
+  font-size: 1rem !important;
+}
+.ql-container.ql-snow .ql-editor ul {
+  font-size: 1rem !important;
+}
+.ql-container.ql-snow .ql-editor li {
+  font-size: 1rem !important;
+}
+
+.ql-toolbar.ql-snow {
+  border: none !important;
+}
+
+.ais-Highlight-highlighted {
+  font-weight: bold !important;
+}
+.ais-Hits-item {
+  border-bottom: 1px solid #2929290a !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease-in-out !important;
+
+  background-color: #eeeeee1e !important;
+}
+.ais-Hits-item:hover {
+  background-color: #dddddd2c !important;
+}
+
+.ais-RefinementList-list li {
+  transition: all 0.2s ease-in-out !important;
+}
+.ais-RefinementList-list li:hover {
+  background-color: #dddddd2c !important;
 }

@@ -1,7 +1,7 @@
 import { cert, getApp, getApps, initializeApp } from "firebase-admin/app";
 
 import { getAuth } from "firebase-admin/auth";
-
+import {getFirestore} from "firebase-admin/firestore"
 const credentials = cert({
   clientEmail: process.env.NEXT_PUBLIC_client_email,
   privateKey: process.env.private_key,
@@ -14,5 +14,6 @@ const app = !getApps().length
   : getApp();
 
 const adminAuth = getAuth(app);
+const firstore = getFirestore(app)
 
-export { adminAuth };
+export { adminAuth ,firstore };

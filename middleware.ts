@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/login", "/signup", "/dashboard"],
+  matcher: ["/login", "/signup", "/dashboard" , "/postjob"],
 };
 
 const isValidSession = async (session: string, url: string) => {

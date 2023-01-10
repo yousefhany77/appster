@@ -3,36 +3,35 @@ import {
   Button,
   Center,
   Container,
+  Heading,
   useColorModeValue,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
-import PersonalInfo from "../../../components/form/employee/PersonalInfo";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { clientAuth, db } from "../../../firebase";
 import { doc, setDoc } from "firebase/firestore/lite";
-import ToggleFormTitle from "../../../components/form/ToggleFormTitle";
+import { useFormik } from "formik";
+import React from "react";
+import * as Yup from "yup";
+import { db } from "../../../firebase";
+import useUser from "../../../hooks/useUser";
 import createUserSession from "../../../util/CreateUserSession";
 import logout from "../../../util/logout";
+import SelecLocation from "../../SelectMenu";
+import InputField from "../InputField";
 
-function SignupPage() {
+function RegisterCompany() {
   const toast = useToast();
   const bgForm = useColorModeValue("gray.100", "gray.700");
   const bgButton = useColorModeValue("brand.primary", "gray.800");
+  const { user } = useUser();
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
+      name: "",
       email: "",
-      password: "",
-      confirmPassword: "",
       country: "",
       city: "",
     },
-    validationSchema: SignupSchema,
+    validationSchema: companySchema,
     onSubmit: async (values, actions) => {
       if (Object.keys(formik.errors).length > 0) {
         return toast({
@@ -44,14 +43,8 @@ function SignupPage() {
           position: "top",
         });
       }
-      //    create user in firebase
-
+      if (!user) return;
       try {
-        const { user } = await createUserWithEmailAndPassword(
-          clientAuth,
-          values.email,
-          values.password
-        );
         // assign user role as employee
         await fetch("/api/assignUserRole", {
           method: "POST",
@@ -60,26 +53,29 @@ function SignupPage() {
           },
           body: JSON.stringify({
             uid: user.uid,
-            role: "employee",
+            role: "company",
           }),
         });
         const token = await user.getIdToken(true);
         createUserSession(token, logout);
         //   create user in firestore in employees collection
-        const docRef = doc(db, "employees", user.uid);
-        const filterdValues: Partial<typeof values> = values;
-        delete filterdValues.confirmPassword;
-        delete filterdValues.password;
+        const docRef = doc(db, "company", user.uid);
         await setDoc(docRef, {
-          ...filterdValues,
+          name: values.name,
+          email: values.email,
+          location: {
+            country: values.country,
+            city: values.city,
+          },
+
           uid: user.uid,
-          isProfileComplete: false,
+          adminEmail: user.email,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
         toast({
-          title: "Account created.",
-          description: "We've created your account for you.",
+          title: "Company Registered.",
+          description: "We've registered your company for you.",
           status: "success",
           duration: 7000,
           isClosable: true,
@@ -107,7 +103,9 @@ function SignupPage() {
         p={12}
         className=" w-full space-y-5 shadow-md rounded-xl"
       >
-        <ToggleFormTitle />
+        <Heading as={"h1"} size="xl" className="text-primary text-center m-8">
+          Register Company
+        </Heading>
         <VStack
           as="form"
           mx="auto"
@@ -119,7 +117,25 @@ function SignupPage() {
             e.key === "Enter" && e.preventDefault();
           }}
         >
-          <PersonalInfo formik={formik} />
+          <InputField
+            formik={formik}
+            name={"name"}
+            label={"Company Name"}
+            placeholder="Appster"
+            isRequired
+          />
+          <InputField
+            formik={formik}
+            name={"email"}
+            label={"Company Jobs Email"}
+            placeholder="jobs@appster.com"
+            isRequired
+          />
+          <SelecLocation
+            setValue={formik.setValues}
+            value={formik.values}
+            formikProps={formik}
+          />
 
           <Button
             isLoading={formik.isSubmitting}
@@ -134,7 +150,7 @@ function SignupPage() {
             transitionDuration="0.3s"
             type="submit"
           >
-            Signup
+            Register Company
           </Button>
         </VStack>
       </Container>
@@ -142,22 +158,14 @@ function SignupPage() {
   );
 }
 
-export default SignupPage;
+export default RegisterCompany;
 
-const SignupSchema = Yup.object().shape({
-  firstname: Yup.string()
-    .min(2, "Too Short!")
-    .max(50, "Too Long!")
-    .required("Required"),
-  lastname: Yup.string()
+const companySchema = Yup.object().shape({
+  name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
     .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().min(8, "Too Short!").required("Required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Required"),
   country: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
 });

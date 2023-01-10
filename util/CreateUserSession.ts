@@ -1,7 +1,7 @@
 import { deleteCookie } from "cookies-next";
 
-const createUserSession = (token: string, signOut: Function) => {
-  fetch("/api/createUserSession", {
+const createUserSession = async (token: string, signOut: Function) => {
+  await fetch("/api/createUserSession", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,11 +11,8 @@ const createUserSession = (token: string, signOut: Function) => {
     }),
   });
 
-  setTimeout(() => {
-    signOut().then(() => {
-      deleteCookie("session");
-      window.location.href = "/login";
-    });
+  setTimeout(async () => {
+    await signOut();
   }, 1000 * 60 * 60 * 24 * 13);
 };
 

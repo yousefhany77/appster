@@ -31,7 +31,6 @@ import CareerInfo from "../../../components/form/employee/CareerInfo";
 import EducationInfo from "../../../components/form/employee/EducatinInfo";
 import { clientAuth, db } from "../../../firebase";
 import { useToast } from "@chakra-ui/react";
-import PersonalInfo from "../../../components/form/employee/PersonalInfo";
 import { useRouter } from "next/navigation";
 import { User } from "firebase/auth";
 
@@ -45,10 +44,9 @@ function SignupPage() {
       jobTitle: "",
       company: "",
       about: "",
-      time: {
-        from: "",
-        to: "",
-      },
+      workedFrom: "",
+      workedTo: "",
+
       skills: [],
 
       university: "",
@@ -71,8 +69,8 @@ function SignupPage() {
                 company: values.company,
                 about: values.about,
                 time: {
-                  from: values.time.from,
-                  to: values.time.to,
+                  from: values.workedFrom,
+                  to: values.workedTo,
                 },
               },
             ],
@@ -165,7 +163,7 @@ function SignupPage() {
       }
     };
     user && checkIfProfileComplete(user.uid);
-  }, [ user]);
+  }, [user]);
   return (
     <Center p={10}>
       <Container bg={bgForm} className=" w-full space-y-5 shadow-md rounded-xl">
@@ -250,8 +248,10 @@ const SignupSchema = Yup.object().shape({
   university: Yup.string().required("Required"),
   degree: Yup.string().required("Required"),
   field: Yup.string().required("Required"),
-  from: Yup.string().required("Required"),
+  from: Yup.date().required("Required"),
   to: Yup.string().required("Required"),
+  workedFrom: Yup.date().required("Required"),
+  workedTo: Yup.string().required("Required"),
 });
 
 const validateStep = async (

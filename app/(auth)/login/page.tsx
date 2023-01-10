@@ -40,7 +40,7 @@ function LoginPage() {
           values.password
         );
         const token = await user.getIdToken(true);
-        createUserSession(token, clientAuth.signOut);
+        await createUserSession(token, clientAuth.signOut);
         toast({
           title: "Success",
           description: "You have successfully logged in",
@@ -50,8 +50,7 @@ function LoginPage() {
           position: "top",
         });
         formik.resetForm();
-        // window.location.href = callbackurl || "/";
-        window.location.replace(callbackurl || "/");
+        window.location.assign(callbackurl || "/");
       } catch (error: any) {
         toast({
           title: "An error occurred.",
