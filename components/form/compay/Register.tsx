@@ -21,7 +21,7 @@ import InputField from "../InputField";
 
 function RegisterCompany() {
   const toast = useToast();
-  const bgForm = useColorModeValue("gray.100", "gray.700");
+  const bgForm = useColorModeValue("gray.50", "gray.700");
   const bgButton = useColorModeValue("brand.primary", "gray.800");
   const { user } = useUser();
   const formik = useFormik({

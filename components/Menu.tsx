@@ -81,14 +81,10 @@ function Menu({ isLogedIn }: { isLogedIn: boolean }) {
               </Link>
               <Button
                 w={"full"}
-                bg={bgButton}
-                variant="outline"
-                textColor="brand.primary"
-                _hover={{
-                  bg: "brand.primaryDark",
-                  textColor: "white",
-                }}
+                colorScheme={"teal"}
+                variant={"outline"}
                 transitionDuration="0.3s"
+                
                 onClick={logout}
               >
                 Logout

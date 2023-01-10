@@ -78,6 +78,22 @@
 }
 
 .ais-Pagination-item > * {
-  background-image: none !important;;
+  background-image: none !important;
+}
 
+.ais-Dropdown--opened .ais-Panel-body {
+  display: flex !important;
+  gap: 0.5rem !important;
+}
+.ais-SearchBox-form {
+  background: none !important;
+}
+.ais-SearchBox-form input {
+  background-color: unset;
+  border: none !important;
+  border-radius: 5px;
+}
+
+.ais-ToggleRefinement-checkbox:checked{
+  background-color: #38B2AC !important;
 }

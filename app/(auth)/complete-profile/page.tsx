@@ -120,7 +120,7 @@ function SignupPage() {
       }
     },
   });
-  const bgForm = useColorModeValue("gray.100", "gray.700");
+  const bgForm = useColorModeValue("gray.50", "gray.700");
   const bgButton = useColorModeValue("gray.300", "gray.800");
   const handleSumbit = (e: FormEvent<HTMLDivElement>): void => {
     e.preventDefault();

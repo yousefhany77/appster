@@ -12,7 +12,7 @@ module.exports = {
         sans: ["var(--font-inter)"],
       },
       colors: {
-        primary: "#fe5252",
+        primary: "#38B2AC",
         secondry: "#f4f1ea",
       },
     },

@@ -46,7 +46,8 @@ const JobPosting = ({
   company,
   className,
 }: IJobPosting) => {
-  const bgForm = useColorModeValue("gray.100", "gray.700");
+  const bgCard = useColorModeValue("gray.50", "gray.700");
+  const borderColor = useColorModeValue("gray.200", "transparent");
   const options: HTMLReactParserOptions = {
     replace: (domNode) => {
       const heading = ["h1", "h2", "h3", "h4", "h5", "h6"];
@@ -89,8 +90,10 @@ const JobPosting = ({
 
   return (
     <Card
-      shadow={"none"}
-      bg={bgForm}
+      shadow={"lg"}
+      border={"1px solid"}
+      bg={bgCard}
+      borderColor={borderColor}
       p={6}
       className={`w-full  rounded-xl ${className}`}
     >
@@ -136,22 +139,22 @@ const JobPosting = ({
             <Heading size="md" textTransform="uppercase">
               skills required {" "}
             </Heading>
-            <Text pt="2" fontSize="md">
-              <Text fontWeight="bold">
-                <span className="font-bold mr-2"> Skills:</span>
-                {skills.map((skill) => (
-                  <Tag
-                    key={skill}
-                    size="sm"
-                    variant="solid"
-                    colorScheme="blue"
-                    mr="2"
-                    mb="2"
-                  >
-                    {skill}
-                  </Tag>
-                ))}
-              </Text>
+            <Text pt="2">
+              {skills.map((skill) => (
+                <Tag
+                  key={skill}
+                  size="md"
+                  variant="solid"
+                  colorScheme={"teal"}
+                  p={2}
+                  paddingInline={"4"}
+                  borderRadius="full"
+                  mr="2"
+                  mb="2"
+                >
+                  {skill}
+                </Tag>
+              ))}
             </Text>
           </Box>
           <Box

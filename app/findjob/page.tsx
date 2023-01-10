@@ -19,17 +19,16 @@ function FindJobsPage() {
   const id = searchParams.get("id");
   const [loading, setLoading] = useState(true);
   const [job, setJob] = useState<IJobPosting | null>(null);
-  const bgForm = useColorModeValue("white", "gray.700");
+  const bgForm = useColorModeValue("gray.50", "gray.700");
 
   useEffect(() => {
     if (!id) return;
-    // setLoading(true);
+    setLoading(true);
     getJob(id).then((job) => {
       setJob(job);
       setLoading(false);
     });
   }, [id]);
-  if (!id) return null;
   if (loading) {
     return (
       <Box bg={bgForm} p={6} className=" w-full  rounded-xl">

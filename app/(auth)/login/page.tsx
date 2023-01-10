@@ -21,7 +21,7 @@ function LoginPage() {
   const searchParams = useSearchParams();
   const callbackurl = searchParams.get("callbackurl");
   const toast = useToast();
-  const bgForm = useColorModeValue("gray.100", "gray.700");
+  const bgForm = useColorModeValue("gray.50", "gray.700");
   const bgButton = useColorModeValue("brand.primary", "gray.800");
   const formik = useFormik({
     initialValues: {

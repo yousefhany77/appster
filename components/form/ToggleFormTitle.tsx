@@ -16,8 +16,15 @@ function ToggleFormTitle() {
       className="w-2/3 cursor-pointer"
     >
       <Box
-        bg={`${pathName === "/signup" ? "gray.300" : "gray.400"}`}
+        bg={`${pathName === "/signup" ? "gray.100" : "gray.400"}`}
         textColor={`${pathName === "/signup" ? "brand.primary" : "white"}`}
+        border={"2px solid"}
+        borderColor={`${
+          pathName === "/signup" ? "brand.primary" : "transparent"
+        }`}
+        rounded={"xl"}
+        roundedRight={"none"}
+        borderRight={"none"}
         p={4}
         shadow={"xl"}
         w={"full"}
@@ -29,7 +36,14 @@ function ToggleFormTitle() {
         </Link>
       </Box>
       <Box
-        bg={`${pathName === "/login" ? "gray.300" : "gray.400"}`}
+        rounded={"xl"}
+        roundedLeft={"none"}
+        border={"2px solid"}
+        borderLeft={"none"}
+        borderColor={`${
+          pathName === "/login" ? "brand.primary" : "transparent"
+        }`}
+        bg={`${pathName === "/login" ? "gray.100" : "gray.400"}`}
         textColor={`${
           pathName?.includes("/login") ? "brand.primary" : "white"
         }`}

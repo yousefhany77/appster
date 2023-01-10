@@ -17,11 +17,7 @@ function Providers({
   cookie: string | undefined;
 }) {
   const theme = extendTheme({
-    Button: {
-      baseStyle: {
-        border: "none",
-      },
-    },
+   
    
     config: {
       initialColorMode: cookie,
@@ -32,8 +28,8 @@ function Providers({
     },
     colors: {
       brand: {
-        primary: "#fe5252",
-        primaryDark: "#E23E57",
+        primary: "#38B2AC",
+        primaryDark: "#2C7A7B",
         secondry: "#f4f1ea",
         secondryDark: "#E1D7C6",
       },

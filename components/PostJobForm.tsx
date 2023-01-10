@@ -54,8 +54,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 function PostJobForm() {
   const toast = useToast();
 
-  const bgForm = useColorModeValue("gray.100", "gray.700");
-  const bgButton = useColorModeValue("brand.primary", "gray.800");
+  const bgForm = useColorModeValue("gray.50", "gray.700");
   const { user } = useUser();
   const [preview, setPreview] = useState(false);
   const [loadingPreview, setLoadingPreview] = useState(false);
@@ -101,7 +100,6 @@ function PostJobForm() {
     onSubmit: async (values, actions) => {
       if (!user) return;
       try {
-      
         await addDoc(collection(db, "job_postings"), {
           ...values,
           companyid: user.uid,
@@ -341,7 +339,6 @@ function PostJobForm() {
                 rounded={"lg"}
                 overflow={"hidden"}
                 textColor={useColorModeValue("gray.800", "black")}
-                // bg={useColorModeValue("white", "gray.500")}
                 borderWidth={
                   formik.errors.jobDescription && formik.touched.jobDescription
                     ? 2
@@ -399,11 +396,8 @@ function PostJobForm() {
               isLoading={formik.isSubmitting || loadingPreview}
               disabled={formik.isSubmitting || loadingPreview}
               width={"full"}
-              variant="outline"
-              bg={bgButton}
-              _hover={{
-                bg: "brand.primaryDark",
-              }}
+              variant="solid"
+              colorScheme="teal"
               transitionDuration="0.3s"
               onClick={postForReview}
               type="button"
@@ -432,12 +426,9 @@ function PostJobForm() {
               variant="outline"
               isLoading={formik.isSubmitting}
               disabled={formik.isSubmitting}
-              bg={bgButton}
-              textColor="white"
-              _hover={{
-                bg: "brand.primaryDark",
-              }}
+              colorScheme="teal"
               transitionDuration="0.3s"
+              _hover={{ bg: "teal.500", color: "white" }}
               onClick={formik.submitForm}
               type="button"
             >
