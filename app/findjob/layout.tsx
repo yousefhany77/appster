@@ -9,12 +9,13 @@ import {
   List,
   ListIcon,
   ListItem,
+  Spinner,
   Tag,
   Text,
   useBreakpointValue,
   useColorModeValue,
   useOutsideClick,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import algoliasearch from "algoliasearch/lite";
 import "instantsearch.css/themes/satellite.css";
@@ -24,14 +25,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaBriefcase, FaCode, FaHome, FaMapMarkerAlt } from "react-icons/fa";
 import {
-  Highlight,
-  Hits,
-  InstantSearch,
-  Pagination,
-  RefinementList,
+  Highlight, InstantSearch, RefinementList,
   useHits,
+  useInfiniteHits,
   useInstantSearch,
-  useSearchBox,
+  useSearchBox
 } from "react-instantsearch-hooks-web";
 import { Hit } from "../../algolia";
 import { FacetDropdown } from "../../components/filters/FacetDropdown";
@@ -76,11 +74,7 @@ function Layout({ children }: { children: React.ReactNode }) {
             {children}
           </Box>
         </HStack>
-        <Pagination
-          classNames={{
-            root: useColorModeValue("white mx-auto text-black", "gray.700 mx-auto text-white"),
-          }}
-        />
+        
       </Container>
     </InstantSearch>
   );
@@ -104,6 +98,8 @@ function SearchBox({ ...props }) {
   useEffect(() => {
     refine(value);
     setIsModalOpen(true);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const { hits } = useHits(props);
@@ -219,7 +215,10 @@ const JobCard = ({ hit }: { hit: Hit }) => {
   const timeago = moment(hit.lastmodified).fromNow();
 
   return (
-    <Link href={jobLink || `/${params}`} className="w-full">
+    <Link
+      href={jobLink || `/${params}`}
+      className="w-full ais-InfiniteHits-list"
+    >
       <Box
         p={8}
         shadow="md"
@@ -288,12 +287,36 @@ const JobCard = ({ hit }: { hit: Hit }) => {
 
 const JobHits = () => {
   const { results } = useInstantSearch();
+  const { hits, isLastPage, showMore } = useInfiniteHits();
+  const [loading,setIsloading] = useState(false)
+  const sentinelRef = useRef(null);
+  useEffect(() => {
+    if (sentinelRef.current !== null) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isLastPage) {
+
+            showMore();
+          }
+        });
+      });
+
+      observer.observe(sentinelRef.current);
+      setIsloading(true)
+      return () => {
+        observer.disconnect();
+        setIsloading(false)
+      };
+    }
+  }, [isLastPage, showMore]);
   if (!results.nbHits) return null;
   return (
-    <VStack spacing="4">
-      {results.hits.map((hit) => (
-        <JobCard hit={hit} key={hit.objectID} />
+    <VStack spacing="4" className="ais-InfiniteHits">
+      {hits.map((hit) => (
+        <JobCard hit={hit as unknown as Hit} key={hit.objectID} />
       ))}
+      <li ref={sentinelRef} className='bg-transparent' aria-hidden="true" />
+      {loading && <Spinner />}
     </VStack>
   );
 };

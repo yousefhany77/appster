@@ -76,3 +76,8 @@
 .ais-RefinementList-list li:hover {
   background-color: #dddddd2c !important;
 }
+
+.ais-Pagination-item > * {
+  background-image: none !important;;
+
+}
