@@ -62,8 +62,8 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* searchbar with auto complete */}
       <SearchBox />
       {/* Filters */}
-      <Container p={"5"} mx={"auto"} as="div">
-        <Flex wrap={"wrap"} alignItems="center" className="gap-2">
+      <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
+        <Flex wrap={"wrap"} alignItems="center" className="gap-2 w-fit mx-auto">
           <FacetDropdown buttonText={"Job Type"}>
             <RefinementList
               classNames={{
@@ -271,8 +271,8 @@ const JobCard = ({ hit }: { hit: Hit }) => {
   const params = `?${new URLSearchParams({ id: hit.objectID })}`;
   const jobLink = useBreakpointValue(
     {
-      md: `findjob/${params}`,
-      base: `findjob/${hit.objectID}`,
+      md: `jobs/${params}`,
+      base: `jobs/${hit.objectID}`,
     },
     {
       // Breakpoint to use when mediaqueries cannot be used, such as in server-side rendering
@@ -364,12 +364,12 @@ const JobHits = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !isLastPage) {
             showMore();
+            setIsloading(true);
           }
         });
       });
 
       observer.observe(sentinelRef.current);
-      setIsloading(true);
       return () => {
         observer.disconnect();
         setIsloading(false);
@@ -394,10 +394,10 @@ const JobHits = () => {
     if (hits.length) {
       const params = `?${new URLSearchParams({ id: hits[0].objectID })}`;
       if (currentView === "desktop") {
-        router.push(`/findjob${params}`);
+        router.push(`/jobs${params}`);
       }
     }
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hits]);
 
@@ -407,8 +407,17 @@ const JobHits = () => {
       {hits.map((hit) => (
         <JobCard hit={hit as unknown as Hit} key={hit.objectID} />
       ))}
-      <li ref={sentinelRef} className="bg-transparent" aria-hidden="true" />
+      <li
+        ref={sentinelRef}
+        className="bg-transparent text-transparent"
+        aria-hidden="true"
+      />
       {loading && <Spinner />}
+      {isLastPage && (
+        <Text fontSize="md" textColor="gray.500">
+          No more jobs to show
+        </Text>
+      )}
     </VStack>
   );
 };

@@ -61,7 +61,7 @@ function Menu({ isLogedIn }: { isLogedIn: boolean }) {
               <Link
                 onClick={() => setIsOpen(false)}
                 className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
-                href={"/"}
+                href={"/jobs"}
               >
                 Find Job
               </Link>

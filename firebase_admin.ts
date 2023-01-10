@@ -15,5 +15,4 @@ const app = !getApps().length
 
 const adminAuth = getAuth(app);
 const firstore = getFirestore(app)
-
-export { adminAuth ,firstore };
+export { adminAuth ,firstore  };

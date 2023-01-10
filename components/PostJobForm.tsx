@@ -25,7 +25,7 @@ import {
   Text,
   useColorModeValue,
   useToast,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import {
   addDoc,
@@ -33,7 +33,7 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  where,
+  where
 } from "firebase/firestore/lite";
 import { useFormik } from "formik";
 import dynamic from "next/dynamic";

@@ -125,7 +125,10 @@ export function FacetDropdown({
   // Get the header button text
   let text;
   if (typeof buttonText === "string") {
-    text = buttonText;
+    text =
+      refinements.length > 0
+        ? `${buttonText} (${refinements.length})`
+        : buttonText;
   } else if (typeof buttonText === "function") {
     text = buttonText({ results, uiState, refinements });
   } else if (typeof attribute === "string") {
