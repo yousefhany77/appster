@@ -11,7 +11,6 @@ async function NavBar() {
   const nextCookies = cookies();
   const session = nextCookies.get("session")?.value;
   const isValid = !!session && !!(await adminAuth.verifySessionCookie(session));
-  console.log(isValid);
   return (
     <header
       className={`w-full py-5  flex  items-center justify-between gap-3 px-4 lg:px-10 shadow-md `}

@@ -23,9 +23,11 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
+  useBreakpointValue,
   useColorModeValue,
   useToast,
-  VStack
+  VisuallyHidden,
+  VStack,
 } from "@chakra-ui/react";
 import {
   addDoc,
@@ -33,11 +35,11 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  where
+  where,
 } from "firebase/firestore/lite";
 import { useFormik } from "formik";
 import dynamic from "next/dynamic";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import * as Yup from "yup";
 import { db } from "../firebase";
@@ -58,6 +60,7 @@ function PostJobForm() {
   const { user } = useUser();
   const [preview, setPreview] = useState(false);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
   const formik = useFormik({
     initialValues: {
       jobTitle: "",
@@ -94,7 +97,7 @@ function PostJobForm() {
           "Max salary must be greater than min salary"
         )
         .required("Required"),
-      jobExperience: Yup.string().required("Required"),
+      jobExperience: Yup.number().positive().required("Required"),
       skills: Yup.array().of(Yup.string()).required("Required"),
     }),
     onSubmit: async (values, actions) => {
@@ -207,12 +210,17 @@ function PostJobForm() {
     // show preview
     setPreview(true);
     setLoadingPreview(false);
+   
   };
-
+useEffect(() => {
+    if (previewRef.current) {
+      previewRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+}, [preview]);
   return (
-    <Center p={10}>
+    <Center>
       <div
-        className={`grid ${
+        className={`grid lg:p-10 ${
           preview ? "lg:grid-cols-2" : "grid-cols-1"
         } items-start gap-6`}
       >
@@ -220,7 +228,7 @@ function PostJobForm() {
           bg={bgForm}
           px={12}
           py={8}
-          className=" w-full space-y-5 shadow-md rounded-xl"
+          className=" w-full space-y-5 lg:shadow-md rounded-xl"
         >
           <Heading as={"h1"} size="xl" className="text-primary text-center m-8">
             Post Job
@@ -326,8 +334,9 @@ function PostJobForm() {
             <InputField
               formik={formik}
               name={"jobExperience"}
-              label={"Job Experience"}
-              placeholder="2 years"
+              label={"Years of Experience"}
+              placeholder="2"
+              type={"number"}
               isRequired
             />
             <FormControl isRequired={true}>
@@ -408,8 +417,9 @@ function PostJobForm() {
         </Container>
         {preview ? (
           <Container
+          ref={previewRef}
             bg={bgForm}
-            className=" w-full space-y-5 p-8 shadow-md rounded-xl"
+            className=" w-full space-y-5 p-8 shadow-md rounded-xl "
           >
             <Heading
               textAlign={"center"}

@@ -7,7 +7,7 @@ import { adminAuth } from "../../firebase_admin";
 async function page() {
   const nextCookies = cookies();
   const session = nextCookies.get("session")!.value;
-  const user = await adminAuth.verifySessionCookie(session);
+  const user = await adminAuth.verifySessionCookie(session,true);
 
   if (user.role !== "company") {
     redirect("/company");

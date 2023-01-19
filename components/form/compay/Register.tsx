@@ -56,8 +56,7 @@ function RegisterCompany() {
             role: "company",
           }),
         });
-        const token = await user.getIdToken(true);
-        createUserSession(token, logout);
+    
         //   create user in firestore in employees collection
         const docRef = doc(db, "company", user.uid);
         await setDoc(docRef, {
@@ -73,6 +72,8 @@ function RegisterCompany() {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
+        const token = await user.getIdToken(true);
+        createUserSession(token, logout);
         toast({
           title: "Company Registered.",
           description: "We've registered your company for you.",

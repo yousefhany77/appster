@@ -9,18 +9,19 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+import { useToast } from "@chakra-ui/react";
+import { setCookie } from "cookies-next";
+import { User } from "firebase/auth";
 import {
-  arrayUnion,
   doc,
   getDoc,
   serverTimestamp,
-  setDoc,
   updateDoc,
 } from "firebase/firestore/lite";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import {
   Dispatch,
-  FC,
   FormEvent,
   SetStateAction,
   useEffect,
@@ -30,9 +31,6 @@ import * as Yup from "yup";
 import CareerInfo from "../../../components/form/employee/CareerInfo";
 import EducationInfo from "../../../components/form/employee/EducatinInfo";
 import { clientAuth, db } from "../../../firebase";
-import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { User } from "firebase/auth";
 
 function SignupPage() {
   const [steps, setSteps] = useState(1);
@@ -46,7 +44,7 @@ function SignupPage() {
       about: "",
       workedFrom: "",
       workedTo: "",
-
+      isStillWorking: false,
       skills: [],
 
       university: "",
@@ -54,12 +52,14 @@ function SignupPage() {
       field: "",
       from: "",
       to: "",
+      isStillStudying: false,
     },
     validationSchema: SignupSchema,
     onSubmit: async (values, actions) => {
       if (user && user.uid) {
         try {
           //   update user in firestore in employees collection
+
           const docRef = doc(db, "employees", user.uid);
 
           const employeeData = {
@@ -87,7 +87,6 @@ function SignupPage() {
             skills: [...values.skills],
             updatedAt: serverTimestamp(),
           };
-          console.log(employeeData);
           await updateDoc(docRef, {
             experience: employeeData.experience,
             education: employeeData.education,
@@ -95,6 +94,14 @@ function SignupPage() {
             isProfileComplete: true,
             updatedAt: employeeData.updatedAt,
           });
+          // add the job title in cookies get relevant jobs
+          setCookie(
+            "jobtitle",
+            values.jobTitle
+              .toLowerCase()
+              ?.replace("junior", "")
+              ?.replace("senior", "")
+          );
           toast({
             title: "Account Updated.",
             description: "We've Updated your account for you.",
@@ -104,8 +111,8 @@ function SignupPage() {
             position: "top",
           });
           formik.resetForm();
+          window.location.href = "/jobs";
         } catch (error: any) {
-          console.log(error);
           toast({
             title: "An error occurred.",
             description: error.code || error.message || "Something went wrong",
@@ -148,7 +155,6 @@ function SignupPage() {
     const checkIfProfileComplete = async (uid: string) => {
       const docRef = doc(db, "employees", uid);
       const docData = await getDoc(docRef);
-      console.log(docData.data());
       const isProfileComplete = docData.data()?.isProfileComplete;
       if (isProfileComplete) {
         toast({
@@ -159,7 +165,7 @@ function SignupPage() {
           isClosable: true,
           position: "top",
         });
-        router.push("/dashboard");
+        router.push("/jobs");
       }
     };
     user && checkIfProfileComplete(user.uid);
@@ -248,10 +254,40 @@ const SignupSchema = Yup.object().shape({
   university: Yup.string().required("Required"),
   degree: Yup.string().required("Required"),
   field: Yup.string().required("Required"),
-  from: Yup.date().required("Required"),
-  to: Yup.string().required("Required"),
-  workedFrom: Yup.date().required("Required"),
-  workedTo: Yup.string().required("Required"),
+  from: Yup.date()
+    .max(new Date(), "Cannot use future date")
+    .required("Required"),
+  isStillStudying: Yup.boolean(),
+  to: Yup.date()
+    .transform((_, originalValue) => {
+      const newValue = new Date().toDateString().replace(/\//g, "-");
+      return originalValue === "Present" ? newValue : originalValue;
+    })
+    .when("isStillStudying", {
+      is: false,
+      then: Yup.date()
+        .min(Yup.ref("from"), "To date must be greater than from date")
+        .required("Required"),
+    }),
+  workedFrom: Yup.date()
+    .max(new Date(), "Cannot use future date")
+    .required("Required"),
+  isStillWorking: Yup.boolean(),
+  workedTo: Yup.date()
+    .transform((_, originalValue) => {
+      const newValue = new Date().toDateString().replace(/\//g, "-");
+      return originalValue === "Present" ? newValue : originalValue;
+    })
+    .when("isStillWorking", {
+      is: false,
+      then: Yup.date()
+        .max(
+          new Date(),
+          "Cannot use future date"
+        )
+        .min(Yup.ref("workedFrom"), "To date must be greater than from date")
+        .required("Required"),
+    }),
 });
 
 const validateStep = async (
@@ -261,7 +297,6 @@ const validateStep = async (
   setSteps: Dispatch<SetStateAction<number>>
 ): Promise<void> => {
   const errors = await formik.validateForm();
-  console.log(steps);
   switch (steps) {
     case 1:
       {

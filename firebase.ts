@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
+import {getStorage , getDownloadURL , ref ,uploadBytes} from 'firebase/storage'
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_apiKey,
@@ -16,5 +17,6 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const clientAuth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
-export { clientAuth, db };
+export { clientAuth, db , storage  };

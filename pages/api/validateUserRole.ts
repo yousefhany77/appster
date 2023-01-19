@@ -10,7 +10,6 @@ export default async function handler(
     const { token } = req.body;
     try {
       const { role } = await adminAuth.verifyIdToken(token);
-
       if (role) return res.status(200).json({ role });
       res.status(401).json({ role: "" });
     } catch (error) {

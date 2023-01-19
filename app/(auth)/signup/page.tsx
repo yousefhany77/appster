@@ -11,7 +11,7 @@ import React from "react";
 import PersonalInfo from "../../../components/form/employee/PersonalInfo";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { clientAuth, db } from "../../../firebase";
 import { doc, setDoc } from "firebase/firestore/lite";
 import ToggleFormTitle from "../../../components/form/ToggleFormTitle";
@@ -63,8 +63,7 @@ function SignupPage() {
             role: "employee",
           }),
         });
-        const token = await user.getIdToken(true);
-        createUserSession(token, logout);
+       
         //   create user in firestore in employees collection
         const docRef = doc(db, "employees", user.uid);
         const filterdValues: Partial<typeof values> = values;
@@ -77,6 +76,11 @@ function SignupPage() {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
+        updateProfile(user, {
+          displayName: `${values.firstname} ${values.lastname}`,
+        });
+        const token = await user.getIdToken(true);
+        createUserSession(token, logout);
         toast({
           title: "Account created.",
           description: "We've created your account for you.",
@@ -86,6 +90,7 @@ function SignupPage() {
           position: "top",
         });
         formik.resetForm();
+        window.location.href = "/";
       } catch (error: any) {
         toast({
           title: "An error occurred.",

@@ -95,13 +95,14 @@ const CareerInfo = ({ formik }: { formik: any }) => {
           label={"To"}
           placeholder="To"
           type="date"
+          
           isRequired
           disabled={isWorking}
           {...formik.getFieldProps("workedTo")}
         />
         <Checkbox
-          colorScheme={"red"}
-          isChecked={isWorking}
+          colorScheme={"teal"}
+          {...formik.getFieldProps("isStillWorking")}
           onChange={(e) => {
             setIsWorking(e.target.checked);
             formik.setValues({

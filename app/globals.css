@@ -60,14 +60,16 @@
   font-weight: bold !important;
 }
 .ais-Hits-item {
-  border-bottom: 1px solid #2929290a !important;
+  border: none !important;
+  border-bottom: 1px solid #6e6e6e1c !important;
   cursor: pointer !important;
   transition: all 0.2s ease-in-out !important;
-
-  background-color: #eeeeee1e !important;
+  background-color: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 .ais-Hits-item:hover {
-  background-color: #dddddd2c !important;
+  background-color: #cecece38 !important;
 }
 
 .ais-RefinementList-list li {
@@ -93,7 +95,23 @@
   border: none !important;
   border-radius: 5px;
 }
+.ais-ToggleRefinement-checkbox {
+  background-color: #549b978c !important;
+}
+.ais-ToggleRefinement-checkbox:checked {
+  background-color: #38b2ac !important;
+}
+.ais-Dropdown.ais-Panel {
+  flex: 1;
+}
 
-.ais-ToggleRefinement-checkbox:checked{
-  background-color: #38B2AC !important;
+
+table th:first-child {
+  /* border-radius = top left, top right, bottom right, bottom left */
+  border-radius: 5px 0 0 0;
+  /* curves the top left */
+}
+
+table th:last-child {
+  border-radius: 0 5px 0 0; /* curves the top right */
 }

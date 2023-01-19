@@ -7,7 +7,7 @@ function useUser() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [user, setUser] = useState(clientAuth.currentUser);
   useEffect(() => {
-    clientAuth.onAuthStateChanged((user) => {
+    return clientAuth.onAuthStateChanged((user) => {
       if (!user) return;
       setUser(user);
       const getUserRole = async () => {
@@ -21,8 +21,9 @@ function useUser() {
         const data = await res.json();
         setUserRole(data.role);
       };
+      getUserRole();
     });
-  }, []);
+  }, [user]);
   return { user, userRole };
 }
 

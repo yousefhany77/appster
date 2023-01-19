@@ -2,6 +2,7 @@
 import {
   As,
   Box,
+  Button,
   Card,
   CardBody,
   Heading,
@@ -14,11 +15,17 @@ import {
   UnorderedList,
   useColorModeValue,
 } from "@chakra-ui/react";
-import parse, { domToReact } from "html-react-parser";
-import { HTMLReactParserOptions, Element } from "html-react-parser";
+import parse, {
+  domToReact,
+  Element,
+  HTMLReactParserOptions,
+} from "html-react-parser";
 import millify from "millify";
+import { usePathname } from "next/navigation";
+import JobApplication from "../JobApplication";
 
 export interface IJobPosting {
+  jobId?: string;
   jobTitle: string;
   jobType: string;
   minJobSalary: string;
@@ -33,11 +40,12 @@ export interface IJobPosting {
   className?: string;
 }
 const JobPosting = ({
+  jobId,
   jobTitle,
   jobType,
   minJobSalary,
   maxJobSalary,
-  skills,
+  skills = [],
   jobExperience,
   jobDescription,
   isRemote,
@@ -87,10 +95,10 @@ const JobPosting = ({
       }
     },
   };
-
+  const pathname = usePathname();
   return (
     <Card
-      shadow={"lg"}
+      shadow={pathname === "/postjob" ? "none" : "lg"}
       border={"1px solid"}
       bg={bgCard}
       borderColor={borderColor}
@@ -99,7 +107,7 @@ const JobPosting = ({
     >
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4" maxH={"80vh"}>
-          <Box>
+          <Box position={"relative"}>
             <Heading size="md" textTransform="capitalize">
               {jobTitle}
             </Heading>
@@ -117,7 +125,10 @@ const JobPosting = ({
               </Text>
               <Text>
                 <span className="font-bold mr-2">Job Experience:</span>
-                {jobExperience}
+                {typeof +jobExperience === "number"
+                  ? `${jobExperience} years`
+                  : jobExperience
+  }
               </Text>
               <Text>
                 <span className="font-bold mr-2">Remote:</span>
@@ -134,28 +145,36 @@ const JobPosting = ({
                 </Text>
               )}
             </Text>
+            {pathname === "/jobs" && jobId && (
+              <Box position={"absolute"} bottom={"0"} right={"0"}>
+                <JobApplication jobId={jobId} />
+              </Box>
+            )}
           </Box>
           <Box>
             <Heading size="md" textTransform="uppercase">
               skills required {" "}
             </Heading>
-            <Text pt="2">
-              {skills.map((skill) => (
-                <Tag
-                  key={skill}
-                  size="md"
-                  variant="solid"
-                  colorScheme={"teal"}
-                  p={2}
-                  paddingInline={"4"}
-                  borderRadius="full"
-                  mr="2"
-                  mb="2"
-                >
-                  {skill}
-                </Tag>
-              ))}
-            </Text>
+
+            {Array.isArray(skills) && (
+              <Text pt="2">
+                {skills.map((skill) => (
+                  <Tag
+                    key={skill}
+                    size="md"
+                    variant="solid"
+                    colorScheme={"teal"}
+                    p={2}
+                    paddingInline={"4"}
+                    borderRadius="full"
+                    mr="2"
+                    mb="2"
+                  >
+                    {skill}
+                  </Tag>
+                ))}
+              </Text>
+            )}
           </Box>
           <Box
             overflowY={"scroll"}

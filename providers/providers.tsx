@@ -1,14 +1,5 @@
 "use client";
-import {
-  Button,
-  ChakraProvider,
-  ColorModeScript,
-  extendTheme,
-  useColorMode,
-  cookieStorageManagerSSR,
-  localStorageManager,
-} from "@chakra-ui/react";
-import { getCookie, hasCookie, setCookie } from "cookies-next";
+import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 function Providers({
   children,
   cookie,
@@ -17,8 +8,6 @@ function Providers({
   cookie: string | undefined;
 }) {
   const theme = extendTheme({
-   
-   
     config: {
       initialColorMode: cookie,
     },
@@ -35,6 +24,7 @@ function Providers({
       },
     },
   });
+
   return (
     <ChakraProvider resetCSS theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

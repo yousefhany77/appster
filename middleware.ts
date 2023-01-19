@@ -4,13 +4,15 @@ import type { NextRequest } from "next/server";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
+  
   //   check if user has session cookie
   const session = request.cookies.get("session")?.value;
   const isValid =
-    session &&
-    session.length > 0 &&
-    (await isValidSession(session, request.nextUrl.origin));
-
+  session &&
+  session.length > 0 &&
+  (await isValidSession(session, request.nextUrl.origin));
+  
+  
   if (isValid) {
     const path = request.nextUrl.pathname;
     if (path === "/login" || path === "/signup") {
@@ -47,5 +49,6 @@ const isValidSession = async (session: string, url: string) => {
     },
     body: JSON.stringify({ session }),
   });
+  console.log({isValid:res.ok});
   return res.ok;
 };

@@ -18,12 +18,18 @@ import {
   useOutsideClick,
   VStack,
 } from "@chakra-ui/react";
-import algoliasearch from "algoliasearch/lite";
+import algoliasearch, { SearchClient } from "algoliasearch/lite";
+import { getCookie } from "cookies-next";
 import "instantsearch.css/themes/satellite.css";
 
 import moment from "moment";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+  useSelectedLayoutSegments,
+} from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaBriefcase, FaCode, FaHome, FaMapMarkerAlt } from "react-icons/fa";
 import {
@@ -43,8 +49,36 @@ const algoliaClient = algoliasearch(
   "8MYY53TECO",
   "ca83bd3c2b393565409a9fd9b9e6fce1"
 );
+const searchClient: SearchClient = {
+  ...algoliaClient,
+  search(requests) {
+    if (requests.every(({ params }) => !params || !params.query)) {
+      return Promise.resolve({
+        results: requests.map(() => ({
+          hits: [],
+          nbHits: 0,
+          nbPages: 0,
+          page: 0,
+          processingTimeMS: 0,
+          hitsPerPage: 0,
+          exhaustiveNbHits: false,
+          query: "",
+          params: "",
+        })),
+      });
+    }
+
+    return algoliaClient.search(requests);
+  },
+};
 type TCurrentView = "mobile" | "desktop";
 function Layout({ children }: { children: React.ReactNode }) {
+  const layoutSegments = useSelectedLayoutSegments();
+  const searchBox_checkbox = useColorModeValue("!bg-gray-200", "!bg-gray-700");
+  const labelColor = useColorModeValue(
+    "!text-gray-700 flex gap-2",
+    "!text-gray-200 flex gap-2"
+  );
   const currentView = useBreakpointValue(
     {
       lg: `desktop`,
@@ -57,72 +91,99 @@ function Layout({ children }: { children: React.ReactNode }) {
       ssr: true,
     }
   ) satisfies TCurrentView | undefined;
+  // redirect mobile user if the user visits the page directly from the desktop view url  to the mobile view url
+  const router = useRouter();
+  const jobId = useSearchParams().get("id");
+  useEffect(() => {
+    if (currentView === "mobile" && layoutSegments.length === 0 && jobId) {
+      router.replace(`/jobs/${jobId}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentView]);
   return (
-    <InstantSearch searchClient={algoliaClient} indexName="job_postings">
+    <InstantSearch searchClient={searchClient} indexName="job_postings">
       {/* searchbar with auto complete */}
       <SearchBox />
       {/* Filters */}
-      <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
-        <Flex wrap={"wrap"} alignItems="center" className="gap-2 w-fit mx-auto">
-          <FacetDropdown buttonText={"Job Type"}>
-            <RefinementList
+      {currentView === "desktop" && (
+        <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
+          <Flex
+            wrap={"wrap"}
+            alignItems="center"
+            className="gap-2 w-fit mx-auto"
+          >
+            <FacetDropdown
+              buttonText={"Job Type"}
               classNames={{
-                searchBox: useColorModeValue("bg-gray-200", "bg-gray-700"),
-                checkbox: useColorModeValue("bg-gray-200 ", "bg-gray-700 "),
+                button: "w-full md:w-fit",
               }}
-              attribute="jobType"
-              searchable={true}
-              searchablePlaceholder="Filter by job type"
-            />
-          </FacetDropdown>
-          <FacetDropdown buttonText={"Job Experience"}>
-            <RefinementList
+            >
+              <RefinementList
+                classNames={{
+                  searchBox: searchBox_checkbox,
+                  checkbox: searchBox_checkbox,
+                }}
+                attribute="jobType"
+                searchable={true}
+                searchablePlaceholder="Filter by job type"
+              />
+            </FacetDropdown>
+            <FacetDropdown
+              buttonText={"Job Experience"}
               classNames={{
-                searchBox: useColorModeValue("bg-gray-200", "bg-gray-700"),
-                checkbox: useColorModeValue("bg-gray-200 ", "bg-gray-700 "),
+                button: "w-full md:w-fit",
               }}
-              attribute="jobExperience"
-              searchable={true}
-              searchablePlaceholder="Filter by job Experience"
-            />
-          </FacetDropdown>
-          <FacetDropdown buttonText={"Location"}>
-            <RefinementList
+            >
+              <RefinementList
+                classNames={{
+                  searchBox: searchBox_checkbox,
+                  checkbox: searchBox_checkbox,
+                }}
+                attribute="jobExperience"
+                searchable={true}
+                searchablePlaceholder="Filter by job Experience"
+              />
+            </FacetDropdown>
+            <FacetDropdown
+              buttonText={"Location"}
               classNames={{
-                searchBox: useColorModeValue("bg-gray-200", "bg-gray-700"),
-                checkbox: useColorModeValue("bg-gray-200 ", "bg-gray-700 "),
+                button: "w-full md:w-fit",
               }}
-              aria-label="country"
-              searchable={true}
-              searchablePlaceholder="Filter by country"
-              attribute="country"
-            />
-            <RefinementList
+            >
+              <RefinementList
+                classNames={{
+                  searchBox: searchBox_checkbox,
+                  checkbox: searchBox_checkbox,
+                }}
+                aria-label="country"
+                searchable={true}
+                searchablePlaceholder="Filter by country"
+                attribute="country"
+              />
+              <RefinementList
+                classNames={{
+                  searchBox: searchBox_checkbox,
+                  checkbox: searchBox_checkbox,
+                }}
+                aria-label="city"
+                searchable={true}
+                searchablePlaceholder="Filter by city"
+                attribute="city"
+              />
+            </FacetDropdown>
+            <ToggleRefinement
               classNames={{
-                searchBox: useColorModeValue("bg-gray-200", "bg-gray-700"),
-                checkbox: useColorModeValue("bg-gray-200", "bg-gray-700"),
+                checkbox: searchBox_checkbox,
+                label: labelColor,
               }}
-              aria-label="city"
-              searchable={true}
-              searchablePlaceholder="Filter by city"
-              attribute="city"
+              attribute="isRemote"
+              label="Remote"
             />
-          </FacetDropdown>
-          <ToggleRefinement
-            classNames={{
-              checkbox: useColorModeValue("!bg-gray-200", "!bg-gray-700 "),
-              label: useColorModeValue(
-                "!text-gray-700 flex gap-2",
-                "!text-gray-200 flex gap-2"
-              ),
-            }}
-            attribute="isRemote"
-            label="Remote"
-          />
-        </Flex>
-      </Container>
+          </Flex>
+        </Container>
+      )}
 
-      {currentView !== "mobile" ? (
+      {currentView === "desktop" ? (
         <Container maxWidth={"80%"} className=" max-h-screen ">
           <HStack
             alignItems={"start"}
@@ -141,7 +202,87 @@ function Layout({ children }: { children: React.ReactNode }) {
         </Container>
       ) : (
         <Container p="5">
-          <JobHits />
+          {layoutSegments.length === 0 && (
+            <>
+              <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
+                <Flex
+                  wrap={"wrap"}
+                  alignItems="center"
+                  className="gap-2 w-fit mx-auto"
+                >
+                  <FacetDropdown
+                    buttonText={"Job Type"}
+                    classNames={{
+                      button: "w-full md:w-fit",
+                    }}
+                  >
+                    <RefinementList
+                      classNames={{
+                        searchBox: searchBox_checkbox,
+                        checkbox: searchBox_checkbox,
+                      }}
+                      attribute="jobType"
+                      searchable={true}
+                      searchablePlaceholder="Filter by job type"
+                    />
+                  </FacetDropdown>
+                  <FacetDropdown
+                    buttonText={"Job Experience"}
+                    classNames={{
+                      button: "w-full md:w-fit",
+                    }}
+                  >
+                    <RefinementList
+                      classNames={{
+                        searchBox: searchBox_checkbox,
+                        checkbox: searchBox_checkbox,
+                      }}
+                      attribute="jobExperience"
+                      searchable={true}
+                      searchablePlaceholder="Filter by job Experience"
+                    />
+                  </FacetDropdown>
+                  <FacetDropdown
+                    buttonText={"Location"}
+                    classNames={{
+                      button: "w-full md:w-fit",
+                    }}
+                  >
+                    <RefinementList
+                      classNames={{
+                        searchBox: searchBox_checkbox,
+                        checkbox: searchBox_checkbox,
+                      }}
+                      aria-label="country"
+                      searchable={true}
+                      searchablePlaceholder="Filter by country"
+                      attribute="country"
+                    />
+                    <RefinementList
+                      classNames={{
+                        searchBox: searchBox_checkbox,
+                        checkbox: searchBox_checkbox,
+                      }}
+                      aria-label="city"
+                      searchable={true}
+                      searchablePlaceholder="Filter by city"
+                      attribute="city"
+                    />
+                  </FacetDropdown>
+                  <ToggleRefinement
+                    classNames={{
+                      checkbox: searchBox_checkbox,
+                      label: labelColor,
+                    }}
+                    attribute="isRemote"
+                    label="Remote"
+                  />
+                </Flex>
+              </Container>
+              <JobHits />
+            </>
+          )}
+          {layoutSegments.length === 1 && children}
         </Container>
       )}
     </InstantSearch>
@@ -170,7 +311,19 @@ function SearchBox({ ...props }) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+  const defHits = getCookie("jobtitle")?.toString();
 
+  // runs only once on mount search for job title in cookie and set it as query
+  const searchParams = useSearchParams().get("id");
+  useEffect(() => {
+    if (defHits && !searchParams) {
+      refine(defHits);
+    }
+    if (!defHits && !searchParams) {
+      refine(" ");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const uniqueHits = hits.reduce((acc: any, hit: any) => {
     //  unique hits by job title
     const isUnique = acc.find((accHit: any) => {
@@ -196,17 +349,20 @@ function SearchBox({ ...props }) {
         <Box
           bg={boxBG}
           textColor={textColor}
-          className="my-3 ais-Hits"
+          className="my-3 ais-Hits p-1"
           ref={ref}
           maxW={"container.md"}
           position={"absolute"}
           width="100%"
+          shadow={"2xl"}
           zIndex={999}
+          rounded={"xl"}
+          overflow="hidden"
         >
           <List className="ais-Hits-list">
             {uniqueHits.map((hit: any) => {
               return (
-                <ListItem key={hit.objectID} className="ais-Hits-item">
+                <ListItem key={hit.objectID}>
                   <AutocompleteHit
                     key={hit.objectID}
                     hit={hit}
@@ -233,15 +389,15 @@ function AutocompleteHit({
 }) {
   const { _highlightResult, jobTitle, skills } = hit as Hit;
   // check hit _highlightResult
-
+  const bg = useColorModeValue("white", "gray.700");
   if (_highlightResult.jobTitle.matchLevel !== "none") {
     return (
-      <Text>
-        <Highlight
-          hit={hit}
-          onClick={() => setQuery(jobTitle)}
-          attribute="jobTitle"
-        />
+      <Text
+        className="ais-Hits-item text-start"
+        background={bg}
+        onClick={() => setQuery(jobTitle)}
+      >
+        <Highlight hit={hit} attribute="jobTitle" className="text-lg" />
       </Text>
     );
   } else if (
@@ -253,14 +409,17 @@ function AutocompleteHit({
     const highlightedSkillvalue =
       highlightedSkill && highlightedSkill.value.replace(/<[^>]+>/g, "");
     return (
-      <Text
+      <VStack
+        background={bg}
+        align={"start"}
+        className="ais-Hits-item text-start"
         onClick={() => highlightedSkillvalue && setQuery(highlightedSkillvalue)}
       >
-        <Highlight hit={hit} attribute="jobTitle" />
+        <Highlight hit={hit} attribute="jobTitle" className="text-lg" />
         <Text fontSize="md" textTransform="capitalize" textColor="gray.500">
           <Highlight hit={hit} attribute="skills" />
         </Text>
-      </Text>
+      </VStack>
     );
   }
   return null;
@@ -376,7 +535,6 @@ const JobHits = () => {
       };
     }
   }, [isLastPage, showMore]);
-  // fetch first job posting on load
   const currentView = useBreakpointValue(
     {
       lg: `desktop`,
@@ -390,10 +548,12 @@ const JobHits = () => {
     }
   ) satisfies TCurrentView | undefined;
   const router = useRouter();
+  const jobId = useSearchParams().get("id");
+  // fetch first job posting on load
   useEffect(() => {
     if (hits.length) {
       const params = `?${new URLSearchParams({ id: hits[0].objectID })}`;
-      if (currentView === "desktop") {
+      if (currentView === "desktop" && !jobId) {
         router.push(`/jobs${params}`);
       }
     }
