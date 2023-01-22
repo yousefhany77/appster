@@ -44,8 +44,8 @@ function JobApplicationsTable({ dataRows, columns }: ITable) {
 
   if (!user) return null;
   return (
-    <TableContainer maxW={"container.2xl"} px={"16"} mx={"auto"}>
-      <Table size={"lg"} variant="simple">
+    <TableContainer maxW={"fit-content"} mx="auto" p={"4"}>
+      <Table size={"lg"} variant="simple" shadow={"md"}>
         <Thead bg={"brand.primary"} rounded={"2xl"}>
           <Tr>
             {columns.map((column) => (
@@ -70,7 +70,7 @@ function JobApplicationsTable({ dataRows, columns }: ITable) {
                   if (column === "jobPosting") {
                     return (
                       <Td key={row[column]}>
-                        <Link isExternal href={`/jobs/${row[column]}`}>
+                        <Link isExternal href={`/jobs?id=${row[column]}`}>
                           Visit <ExternalLinkIcon mx="2px" />
                         </Link>
                       </Td>

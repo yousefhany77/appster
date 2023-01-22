@@ -1,65 +1,34 @@
-"use client";
+import { cookies } from "next/headers";
+import EmployeeDashboard from "../../components/dashboard/employee";
+import EmployerDashboard from "../../components/dashboard/employer";
 
-import { Container, Heading, Spinner } from "@chakra-ui/react";
-import { collection, getDocs } from "firebase/firestore/lite";
-import JobApplicationsTable, {
-  IEmployeeRow,
-} from "../../components/table/JobApplicationsTable";
-import { db } from "../../firebase";
-import useUser from "../../hooks/useUser";
-import useSWR from "swr";
-function Page() {
-  const { user } = useUser();
-  const { data: applications, isLoading: applicationsLoading } = useSWR(
-    user?.uid,
-    getApplications
+async function Page({
+  searchParams,
+}: {
+  searchParams?: { tab: "myApplications" };
+}) {
+  const nextCookies = cookies();
+  const session = nextCookies.get("session")?.value;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/validateSession`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ session }),
+    }
   );
-  if (applicationsLoading || !user)
-    return (
-      <Container>
-        <Heading my={"8"} textAlign="center">
-          Job Applications
-        </Heading>
-        <Spinner mx={"auto"} display="block" />
-      </Container>
-    );
-  if (!applications) return <div>no data</div>;
+  const { role } = await res.json();
   return (
-    <>
-      <Heading my={"8"} textAlign="center">
-        Job Applications
-      </Heading>
-      <JobApplicationsTable
-        columns={[
-          "jobTitle",
-          "company",
-          "jobPosting",
-          "status",
-          "details",
-          "interviewDate",
-        ]}
-        dataRows={applications}
-      />
-    </>
+    <div className="container mx-auto">
+      {role === "company" && searchParams?.tab !== "myApplications" ? (
+        <EmployerDashboard />
+      ) : (
+        <EmployeeDashboard />
+      )}
+    </div>
   );
 }
 
 export default Page;
-
-const getApplications = async (userId: string): Promise<IEmployeeRow[]> => {
-  const docRef = collection(db, "employees", userId, "applications");
-  const applications = await getDocs(docRef);
-  return applications.docs.map((doc) => ({
-    company: doc.data().company,
-    status: doc.data().status,
-    details: {
-      resumeLink: doc.data().resumeLink || "",
-      coverLetter: doc.data().coverLetter,
-      employeeName: doc.data().name,
-      email: doc.data().email,
-    },
-    interviewDate: doc.data().interviewDate,
-    jobPosting: doc.data().jobId,
-    jobTitle: doc.data().jobTitle,
-  }));
-};

@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import {
   collection,
   deleteDoc,
@@ -8,8 +8,11 @@ import {
 } from "firebase/firestore/lite";
 import React from "react";
 import { db } from "../../../firebase";
-
+import { mutate } from "swr";
+import { useRouter } from "next/navigation";
 function Withdraw({ jobId, uid }: { jobId: string; uid: string }) {
+  const toast = useToast();
+  const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   //   delete from company job list
   const q = query(
@@ -32,6 +35,19 @@ function Withdraw({ jobId, uid }: { jobId: string; uid: string }) {
       deleteDoc(doc.ref);
     });
     setLoading(false);
+    mutate(`dashboard/employee/${uid}`, (data: any) => data, {
+      revalidate: true,
+    });
+    router.refresh();
+
+    toast({
+      title: "Withdrawn",
+      description: "You have withdrawn from this job posting",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+      position: "top",
+    });
   };
   return (
     <Button

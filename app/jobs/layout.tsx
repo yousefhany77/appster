@@ -56,7 +56,7 @@ const searchClient: SearchClient = {
       return Promise.resolve({
         results: requests.map(() => ({
           hits: [],
-          nbHits: 0,
+          nbHits: -1,
           nbPages: 0,
           page: 0,
           processingTimeMS: 0,
@@ -322,8 +322,10 @@ function SearchBox({ ...props }) {
     if (!defHits && !searchParams) {
       refine(" ");
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const uniqueHits = hits.reduce((acc: any, hit: any) => {
     //  unique hits by job title
     const isUnique = acc.find((accHit: any) => {
@@ -513,7 +515,7 @@ const JobCard = ({ hit }: { hit: Hit }) => {
 };
 
 const JobHits = () => {
-  const { results } = useInstantSearch();
+  const { results, status } = useInstantSearch();
   const { hits, isLastPage, showMore } = useInfiniteHits();
   const [loading, setIsloading] = useState(false);
   const sentinelRef = useRef(null);
@@ -560,8 +562,20 @@ const JobHits = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hits]);
-
-  if (!results.nbHits) return null;
+  const jobTitleCookie = getCookie("jobtitle")?.toString();
+  if (!results.__isArtificial && results.nbHits === 0 && jobTitleCookie)
+    return (
+      <Text maxW={"65ch"} mx="auto" fontSize="md" textColor="gray.500">
+        We&rsquo;re sorry, but it looks like there are currently no jobs
+        available for{" "}
+        <em>
+          <b>{jobTitleCookie}</b>
+        </em>
+        . We recommend you to try searching by alternative job titles or
+        keywords related to your desired position. Also you can check our
+        website frequently for new job openings
+      </Text>
+    );
   return (
     <VStack spacing="4" className="ais-InfiniteHits">
       {hits.map((hit) => (

@@ -50,8 +50,8 @@ function ApplicantsTable({ dataRows, columns, jobId }: ITable) {
       throw new Error("Table rows and columns must have the same length");
   }
   return (
-    <TableContainer maxW={"container.2xl"} px={"16"} mx={"auto"}>
-      <Table size={"lg"} variant="simple">
+    <TableContainer maxW={"fit-content"} mx="auto" p={"4"}>
+      <Table size={"lg"} variant="simple" shadow={"md"}>
         <Thead bg={"brand.primary"} rounded={"2xl"}>
           <Tr>
             {columns.map((column) => (
@@ -70,7 +70,10 @@ function ApplicantsTable({ dataRows, columns, jobId }: ITable) {
         <Tbody>
           {dataRows.length === 0 ? (
             <Tr>
-              <Td colSpan={columns.length + 1} className="text-center capitalize">
+              <Td
+                colSpan={columns.length + 1}
+                className="text-center capitalize"
+              >
                 No applicants yet
               </Td>
             </Tr>
@@ -91,7 +94,7 @@ function ApplicantsTable({ dataRows, columns, jobId }: ITable) {
                   else {
                     return (
                       <Td
-                        key={crypto.randomUUID.toString()}
+                        key={crypto?.randomUUID.toString()}
                         paddingInline="3"
                         textAlign={"center"}
                       >

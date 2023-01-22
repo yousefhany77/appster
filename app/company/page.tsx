@@ -17,7 +17,7 @@ async function Page() {
     const q = query(collection(db, "company"), where("uid", "==", user.uid));
     const querySnapshot = await getDocs(q);
     const company = querySnapshot.docs.length === 1;
-    return company ? redirect("/dashboard") : <RegisterCompany />;
+    return company ? redirect("/postjob") : <RegisterCompany />;
   }
 }
 

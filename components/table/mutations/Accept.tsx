@@ -1,5 +1,6 @@
 "use client";
 import { Button, useToast } from "@chakra-ui/react";
+import { render } from "@react-email/render";
 import {
   collection,
   doc,
@@ -9,11 +10,11 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore/lite";
-import React, { useCallback, useState } from "react";
-import { db } from "../../../firebase";
-import { render } from "@react-email/render";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { mutate } from "swr";
 import EmailTemplate from "../../../components/email/emailTemplate";
-import { useSWRConfig } from "swr";
+import { db } from "../../../firebase";
 import useUser from "../../../hooks/useUser";
 function Accept({
   uid,
@@ -26,10 +27,10 @@ function Accept({
   email: string;
   name: string;
 }) {
-  const { mutate } = useSWRConfig();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useUser();
   const toast = useToast();
+  const router = useRouter();
   const handleClick = useCallback(async () => {
     try {
       setLoading(true);
@@ -49,15 +50,7 @@ function Accept({
         status: "accepted",
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      mutate(jobId, (data: any) => {
-        const newData = data.map((item: any) => {
-          if (item.uid === uid) {
-            return { ...item, status: "accepted" };
-          }
-          return item;
-        });
-        return newData;
-      });
+
       fetch("/api/sendEmail", {
         method: "POST",
         headers: {
@@ -102,6 +95,8 @@ function Accept({
           ),
         }),
       });
+      router.refresh();
+
       toast({
         title: "Application Accepted",
         description: "Acceptance email has been sent to the applicant",
@@ -110,6 +105,7 @@ function Accept({
         isClosable: true,
         position: "top-right",
       });
+      router.refresh();
     } catch (error) {
       toast({
         title: "Error rejecting the application",
@@ -119,14 +115,18 @@ function Accept({
         isClosable: true,
         position: "top-right",
       });
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Button isLoading={loading} variant={"solid"} colorScheme="teal" onClick={handleClick}>
+    <Button
+      isLoading={loading}
+      variant={"solid"}
+      colorScheme="teal"
+      onClick={handleClick}
+    >
       Accept
     </Button>
   );

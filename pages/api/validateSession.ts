@@ -12,10 +12,14 @@ export default async function handler(
     try {
       const { role } = await adminAuth.verifySessionCookie(session);
 
-      if (role) return res.status(200).json({ role });
-      res.status(401).json({ role: "" });
+      if (role) {
+        return res.status(200).json({ role });
+      } else {
+        res.status(401).json({ role: "" });
+      }
     } catch (error) {
-       res.setHeader(
+      console.log(error);
+      res.setHeader(
         "Set-Cookie",
         "session=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Strict"
       );

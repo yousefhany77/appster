@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { clientAuth } from "../firebase";
 
 function useUser() {
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<"company" | "employee" | null>(null);
   const [user, setUser] = useState(clientAuth.currentUser);
   useEffect(() => {
     return clientAuth.onAuthStateChanged((user) => {

@@ -1,11 +1,22 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
 function ToggleFormTitle() {
   const pathName = usePathname();
-  console.log(pathName);
+
+  const currentView = useBreakpointValue(
+    {
+      lg: `desktop`,
+      base: `mobile`,
+    },
+    {
+      // Breakpoint to use when mediaqueries cannot be used, such as in server-side rendering
+      // (Defaults to 'base')
+      fallback: "base",
+    }
+  );
   return (
     <Flex
       rounded={"xl"}
@@ -13,7 +24,8 @@ function ToggleFormTitle() {
       overflow={"hidden"}
       mx="auto"
       mb={10}
-      className="w-2/3 cursor-pointer"
+      className="w-2/3 cursor-pointer "
+      hidden={currentView === "mobile"}
     >
       <Box
         bg={`${pathName === "/signup" ? "gray.100" : "gray.400"}`}

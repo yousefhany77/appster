@@ -61,7 +61,7 @@ function JobApplication({ jobId }: { jobId: string }) {
       coverletter: Yup.string()
         .min(100, "Please write More")
 
-        .max(300, "Max length 300 character")
+        .max(900, "Max length 900 character")
         .required("Required"),
     }),
     onSubmit: async (values) => {

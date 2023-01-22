@@ -4,24 +4,25 @@ import {
   Button,
   HStack,
   IconButton,
+  Text,
   useColorModeValue,
   useOutsideClick,
   VStack,
 } from "@chakra-ui/react";
-import { deleteCookie, setCookie, setCookies } from "cookies-next";
 import Link from "next/link";
 import React from "react";
+import useUser from "../hooks/useUser";
 import logout from "../util/logout";
 
 function Menu({ isLogedIn }: { isLogedIn: boolean }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { user, userRole } = useUser();
   const ref = React.useRef(null);
   useOutsideClick({
     ref: ref,
     handler: () => setIsOpen(false),
   });
   const bg = useColorModeValue("white", "gray.800");
-  const bgButton = useColorModeValue("gray.200", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.700");
   return (
     <div>
@@ -51,6 +52,19 @@ function Menu({ isLogedIn }: { isLogedIn: boolean }) {
               shadow={"xs"}
               p={2}
             >
+              <Text
+                className="p-2 rounded-md  text-primary text-center w-full"
+                fontWeight={"bold"}
+              >
+                {user?.displayName}
+              </Text>
+              <Link
+                onClick={() => setIsOpen(false)}
+                className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
+                href={"/profile"}
+              >
+                Profile
+              </Link>
               <Link
                 onClick={() => setIsOpen(false)}
                 className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
@@ -58,6 +72,15 @@ function Menu({ isLogedIn }: { isLogedIn: boolean }) {
               >
                 Dashboard
               </Link>
+              {userRole === "company" ? (
+                <Link
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
+                  href={"/dashboard?tab=myApplications"}
+                >
+                  Job Applications
+                </Link>
+              ) : null}
               <Link
                 onClick={() => setIsOpen(false)}
                 className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
@@ -72,19 +95,12 @@ function Menu({ isLogedIn }: { isLogedIn: boolean }) {
               >
                 Post Job
               </Link>
-              <Link
-                onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-slate-200/40 transition-colors rounded-md  ease-in-out duration-200 text-center w-full"
-                href={"/profile"}
-              >
-                Profile
-              </Link>
+
               <Button
                 w={"full"}
                 colorScheme={"teal"}
                 variant={"outline"}
                 transitionDuration="0.3s"
-                
                 onClick={logout}
               >
                 Logout

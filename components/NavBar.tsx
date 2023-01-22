@@ -1,5 +1,4 @@
 import localFont from "@next/font/local";
-import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import { adminAuth } from "../firebase_admin";
 const brandFont = localFont({

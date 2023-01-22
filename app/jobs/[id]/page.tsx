@@ -1,4 +1,5 @@
 import { doc, getDoc } from "firebase/firestore/lite";
+import { notFound } from "next/navigation";
 import React from "react";
 import JobApplication from "../../../components/JobApplication";
 import JobPosting, {
@@ -28,8 +29,11 @@ async function page({ params: { id } }: { params: { id: string } }) {
         <JobApplication jobId={id} />
       </div>
     );
-  } catch (error) {
-    return <div>Job not found</div>;
+  } catch (error: any) {
+    if (error.message === "Job not found") notFound();
+    else {
+      return <div className="text-center">Something went wrong</div>;
+    }
   }
 }
 

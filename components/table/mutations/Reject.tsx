@@ -13,8 +13,9 @@ import React, { useCallback, useState } from "react";
 import { db } from "../../../firebase";
 import { render } from "@react-email/render";
 import EmailTemplate from "../../../components/email/emailTemplate";
-import { useSWRConfig } from "swr";
+import { mutate, useSWRConfig } from "swr";
 import useUser from "../../../hooks/useUser";
+import { useRouter } from "next/navigation";
 function Reject({
   uid,
   jobId,
@@ -27,7 +28,7 @@ function Reject({
   name: string;
 }) {
   const [loading, setLoading] = useState(false);
-  const { mutate } = useSWRConfig();
+  const router = useRouter();
   const { user } = useUser();
   const toast = useToast();
   const handleClick = useCallback(async () => {
@@ -50,15 +51,7 @@ function Reject({
         status: "rejected",
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      mutate(jobId, (data: any) => {
-        const newData = data.map((item: any) => {
-          if (item.uid === uid) {
-            return { ...item, status: "rejected" };
-          }
-          return item;
-        });
-        return newData;
-      });
+
       fetch("/api/sendEmail", {
         method: "POST",
         headers: {
@@ -111,6 +104,8 @@ function Reject({
         isClosable: true,
         position: "top-right",
       });
+      router.refresh();
+
     } catch (error) {
       toast({
         title: "Error rejecting the application",
@@ -125,7 +120,12 @@ function Reject({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Button variant={"solid"} colorScheme="red" onClick={handleClick}>
+    <Button
+      isLoading={loading}
+      variant={"solid"}
+      colorScheme="red"
+      onClick={handleClick}
+    >
       Reject
     </Button>
   );

@@ -27,7 +27,13 @@ const EducationInfo = ({ formik }: { formik: any }) => {
         placeholder="Your Field"
         isRequired
       />
-      <HStack spacing={15} justifyContent="start" alignItems="start">
+      <HStack
+        spacing={15}
+        justifyContent="start"
+        alignItems="start"
+        className="flex-warp lg:flex-nowrap"
+        gap={4}
+      >
         <InputField
           formik={formik}
           name={"from"}

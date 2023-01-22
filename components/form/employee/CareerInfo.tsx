@@ -79,7 +79,13 @@ const CareerInfo = ({ formik }: { formik: any }) => {
         {...formik.getFieldProps("about")}
       />
 
-      <HStack spacing={15} justifyContent="start" alignItems="start">
+      <HStack
+        spacing={15}
+        justifyContent="start"
+        alignItems="start"
+        className="flex-warp lg:flex-nowrap"
+        gap={4}
+      >
         <InputField
           formik={formik}
           name={"workedFrom"}
@@ -95,7 +101,6 @@ const CareerInfo = ({ formik }: { formik: any }) => {
           label={"To"}
           placeholder="To"
           type="date"
-          
           isRequired
           disabled={isWorking}
           {...formik.getFieldProps("workedTo")}

@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Container,
+  Heading,
   useColorModeValue,
   useToast,
   VStack,
@@ -17,11 +18,12 @@ import { doc, setDoc } from "firebase/firestore/lite";
 import ToggleFormTitle from "../../../components/form/ToggleFormTitle";
 import createUserSession from "../../../util/CreateUserSession";
 import logout from "../../../util/logout";
-
+import { useRouter } from "next/navigation";
 function SignupPage() {
   const toast = useToast();
   const bgForm = useColorModeValue("gray.50", "gray.700");
   const bgButton = useColorModeValue("brand.primary", "gray.800");
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstname: "",
@@ -63,7 +65,7 @@ function SignupPage() {
             role: "employee",
           }),
         });
-       
+
         //   create user in firestore in employees collection
         const docRef = doc(db, "employees", user.uid);
         const filterdValues: Partial<typeof values> = values;
@@ -90,7 +92,7 @@ function SignupPage() {
           position: "top",
         });
         formik.resetForm();
-        window.location.href = "/";
+        router.replace("/jobs");
       } catch (error: any) {
         toast({
           title: "An error occurred.",
@@ -112,7 +114,9 @@ function SignupPage() {
         p={12}
         className=" w-full space-y-5 shadow-md rounded-xl"
       >
-        <ToggleFormTitle />
+        <Heading mb={"8"} textAlign={"center"} size={"lg"}>
+          Sign up
+        </Heading>
         <VStack
           as="form"
           mx="auto"

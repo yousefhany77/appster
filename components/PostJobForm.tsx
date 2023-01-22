@@ -32,9 +32,11 @@ import {
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   query,
   serverTimestamp,
+  setDoc,
   where,
 } from "firebase/firestore/lite";
 import { useFormik } from "formik";
@@ -97,15 +99,19 @@ function PostJobForm() {
           "Max salary must be greater than min salary"
         )
         .required("Required"),
-      jobExperience: Yup.number().positive().required("Required"),
+      jobExperience: Yup.string().required("Required"),
       skills: Yup.array().of(Yup.string()).required("Required"),
     }),
     onSubmit: async (values, actions) => {
       if (!user) return;
       try {
-        await addDoc(collection(db, "job_postings"), {
+        const docRef = await addDoc(collection(db, "job_postings"), {
           ...values,
           companyid: user.uid,
+          createdAt: serverTimestamp(),
+        });
+        setDoc(doc(db, "company", user.uid, "job_postings", docRef.id), {
+          job_postings: docRef.id,
           createdAt: serverTimestamp(),
         });
         toast({
@@ -120,6 +126,7 @@ function PostJobForm() {
         setSkills([]);
         setPreview(false);
       } catch (error) {
+        console.log(error);
         toast({
           title: "Error",
           description: "Something went wrong",
@@ -210,13 +217,12 @@ function PostJobForm() {
     // show preview
     setPreview(true);
     setLoadingPreview(false);
-   
   };
-useEffect(() => {
+  useEffect(() => {
     if (previewRef.current) {
       previewRef.current.scrollIntoView({ behavior: "smooth" });
     }
-}, [preview]);
+  }, [preview]);
   return (
     <Center>
       <div
@@ -331,14 +337,24 @@ useEffect(() => {
                 <FormErrorMessage>{skillsError}</FormErrorMessage>
               </FormControl>
             </VStack>
-            <InputField
-              formik={formik}
-              name={"jobExperience"}
-              label={"Years of Experience"}
-              placeholder="2"
-              type={"number"}
+            <FormControl
               isRequired
-            />
+              isInvalid={formik.touched.jobExperience && !!formik.errors.jobExperience}
+            >
+              <FormLabel>Job Experience</FormLabel>
+              <Select
+                {...formik.getFieldProps("jobExperience")}
+                placeholder="Select Job Experience"
+                isRequired
+              >
+                <option value="Entry Level">Entry Level</option>
+                <option value="Junior Level">Junior Level</option>
+                <option value="Mid Level">Mid Level</option>
+                <option value="Senior Level">Senior Level</option>
+              </Select>
+              <FormErrorMessage>{formik.errors.jobExperience}</FormErrorMessage>
+            </FormControl>
+
             <FormControl isRequired={true}>
               <FormLabel fontWeight={"bold"} alignSelf={"start"}>
                 Job Description
@@ -417,7 +433,7 @@ useEffect(() => {
         </Container>
         {preview ? (
           <Container
-          ref={previewRef}
+            ref={previewRef}
             bg={bgForm}
             className=" w-full space-y-5 p-8 shadow-md rounded-xl "
           >

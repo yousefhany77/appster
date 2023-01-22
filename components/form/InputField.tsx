@@ -18,6 +18,7 @@ function InputField(props: InputFieldProps) {
   const { name, label, formik, isRequired } = props;
   return (
     <FormControl
+      marginInline={"0"}
       isInvalid={
         !!formik.errors[name.toString()] && formik.touched[name.toString()]
       }

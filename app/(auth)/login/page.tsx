@@ -4,18 +4,18 @@ import {
   Button,
   Center,
   Container,
+  Heading,
   useColorModeValue,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import InputField from "../../../components/form/InputField";
-import ToggleFormTitle from "../../../components/form/ToggleFormTitle";
 import * as Yup from "yup";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { clientAuth } from "../../../firebase";
 import createUserSession from "../../../util/CreateUserSession";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginPage() {
   const searchParams = useSearchParams();
@@ -23,6 +23,7 @@ function LoginPage() {
   const toast = useToast();
   const bgForm = useColorModeValue("gray.50", "gray.700");
   const bgButton = useColorModeValue("brand.primary", "gray.800");
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -50,7 +51,9 @@ function LoginPage() {
           position: "top",
         });
         formik.resetForm();
-        window.location.assign(callbackurl || "/");
+        router.replace(callbackurl || "/jobs",{
+          forceOptimisticNavigation: true,
+        });
       } catch (error: any) {
         toast({
           title: "An error occurred.",
@@ -72,7 +75,8 @@ function LoginPage() {
         p={12}
         className=" w-full space-y-5 shadow-md rounded-xl"
       >
-        <ToggleFormTitle />
+        {/* <ToggleFormTitle /> */}
+        <Heading textAlign={"center"} size={"lg"}>Login</Heading>
         <VStack
           as="form"
           mx="auto"

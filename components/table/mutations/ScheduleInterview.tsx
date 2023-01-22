@@ -26,7 +26,8 @@ import { useSWRConfig } from "swr";
 import { db } from "../../../firebase";
 import useUser from "../../../hooks/useUser";
 import EmailTemplate from "../../email/emailTemplate";
-
+import { useRouter } from "next/navigation";
+import { mutate } from "swr";
 function ScheduleInterview({
   uid,
   jobId,
@@ -41,11 +42,11 @@ function ScheduleInterview({
   const [interviewDate, setInterviewDate] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isInvalidDate, setisInvalidDate] = useState(false);
+  const [loading, setLoading] = useState(false);
   const btnRef = useRef(null);
-  const { mutate } = useSWRConfig();
   const { user } = useUser();
   const toast = useToast();
-
+  const router = useRouter();
   const handleClick = async () => {
     if (!interviewDate) {
       toast({
@@ -57,6 +58,7 @@ function ScheduleInterview({
       return;
     }
     try {
+      setLoading(true);
       const docRef = doc(db, "job_postings", jobId, "applications", uid);
       const jobPosting = (await getDoc(doc(db, "job_postings", jobId))).data();
       updateDoc(docRef, {
@@ -76,19 +78,7 @@ function ScheduleInterview({
       });
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      mutate(jobId, (data: any) => {
-        const newData = data.map((item: any) => {
-          if (item.uid === uid) {
-            return {
-              ...item,
-              status: "Interview Scheduled",
-              interviewDate: interviewDate,
-            };
-          }
-          return item;
-        });
-        return newData;
-      });
+
       fetch("/api/sendEmail", {
         method: "POST",
         headers: {
@@ -146,6 +136,7 @@ function ScheduleInterview({
         isClosable: true,
         position: "top-right",
       });
+      router.refresh();
     } catch (error) {
       toast({
         title: "Error rejecting the application",
@@ -156,10 +147,12 @@ function ScheduleInterview({
         position: "top-right",
       });
     }
+    setLoading(false);
   };
   return (
     <>
       <Button
+        isLoading={loading}
         ref={btnRef}
         colorScheme="teal"
         variant="outline"
@@ -202,10 +195,19 @@ function ScheduleInterview({
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
+            <Button
+              isLoading={loading}
+              variant="outline"
+              mr={3}
+              onClick={onClose}
+            >
               Cancel
             </Button>
-            <Button onClick={handleClick} colorScheme="teal">
+            <Button
+              isLoading={loading}
+              onClick={handleClick}
+              colorScheme="teal"
+            >
               Schedule Interview
             </Button>
           </DrawerFooter>

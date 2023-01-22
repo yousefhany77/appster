@@ -4,15 +4,14 @@ import {
   Skeleton,
   SkeletonText,
   useColorModeValue,
-  useToast,
+  useToast
 } from "@chakra-ui/react";
 import { doc, getDoc } from "firebase/firestore/lite";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInstantSearch, useSearchBox } from "react-instantsearch-hooks-web";
-import JobApplication from "../../components/JobApplication";
 import JobPosting, {
-  IJobPosting,
+  IJobPosting
 } from "../../components/JobPosting/JobPosting";
 import { db } from "../../firebase";
 

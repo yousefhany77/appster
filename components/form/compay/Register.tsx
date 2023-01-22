@@ -74,6 +74,7 @@ function RegisterCompany() {
         });
         const token = await user.getIdToken(true);
         createUserSession(token, logout);
+        window.location.href = "/postjob";
         toast({
           title: "Company Registered.",
           description: "We've registered your company for you.",

@@ -15,11 +15,11 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
-interface IApplicant {
+export interface IApplicant {
   firstname: string;
   lastname: string;
   email: string;
-  contry: string;
+  country: string;
   city: string;
   education: [
     {
@@ -54,7 +54,7 @@ const getApplicant = async (uid: string) => {
 };
 
 function ApplicantDetails({ uid }: { uid: string }) {
-  const { data, isLoading } = useSWR(`/details/${uid}`, () =>
+  const { data, isLoading } = useSWR(`applicants/details/${uid}`, () =>
     getApplicant(uid)
   );
   if (isLoading)
@@ -69,7 +69,7 @@ function ApplicantDetails({ uid }: { uid: string }) {
     return (
       <Container>
         <p className="my-2">
-          {data.city}, {data.contry}
+          {data.city}, {data.country}
         </p>
         <Accordion my="4" allowToggle allowMultiple>
           <AccordionItem py="1">
@@ -83,7 +83,7 @@ function ApplicantDetails({ uid }: { uid: string }) {
             </Heading>
             <AccordionPanel p={4}>
               {data.experience?.map((exp) => (
-                <Box shadow="sm" key={crypto.randomUUID.toString()}>
+                <Box shadow="sm" key={crypto?.randomUUID.toString()}>
                   <Heading as={"h3"} size="sm">
                     {exp.company}
                   </Heading>
@@ -107,7 +107,7 @@ function ApplicantDetails({ uid }: { uid: string }) {
             </Heading>
             <AccordionPanel p={4}>
               {data.education?.map((edu) => (
-                <Box shadow="sm" key={crypto.randomUUID.toString()}>
+                <Box shadow="sm" key={crypto?.randomUUID.toString()}>
                   <Heading as={"h3"} size="sm">
                     {edu.university}
                   </Heading>
