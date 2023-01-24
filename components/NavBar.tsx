@@ -1,5 +1,6 @@
 import localFont from "@next/font/local";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { adminAuth } from "../firebase_admin";
 const brandFont = localFont({
   src: "../public/brandFont.woff2",
@@ -14,16 +15,18 @@ async function NavBar() {
     <header
       className={`w-full py-5  flex  items-center justify-between gap-3 px-4 lg:px-10 shadow-md `}
     >
-      <span
+      <Link
+        href="/"
         className={`${brandFont.className} text-3xl font-extrabold  flex-1 text-primary hidden lg:block`}
       >
         Appster
-      </span>
-      <span
+      </Link>
+      <Link
+        href="/"
         className={`${brandFont.className} text-3xl font-extrabold text-primary flex-1 lg:hidden`}
       >
         A
-      </span>
+      </Link>
 
       <ToggleDarkmode />
       <Menu isLogedIn={isValid} />

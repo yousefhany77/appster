@@ -15,7 +15,6 @@ import { useFormik } from "formik";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { clientAuth, db } from "../../../firebase";
 import { doc, setDoc } from "firebase/firestore/lite";
-import ToggleFormTitle from "../../../components/form/ToggleFormTitle";
 import createUserSession from "../../../util/CreateUserSession";
 import logout from "../../../util/logout";
 import { useRouter } from "next/navigation";
