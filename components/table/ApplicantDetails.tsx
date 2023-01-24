@@ -83,7 +83,7 @@ function ApplicantDetails({ uid }: { uid: string }) {
             </Heading>
             <AccordionPanel p={4}>
               {data.experience?.map((exp) => (
-                <Box shadow="sm" key={crypto?.randomUUID.toString()}>
+                <Box my={"3"} shadow="sm" key={crypto?.randomUUID.toString()}>
                   <Heading as={"h3"} size="sm">
                     {exp.company}
                   </Heading>
@@ -107,7 +107,7 @@ function ApplicantDetails({ uid }: { uid: string }) {
             </Heading>
             <AccordionPanel p={4}>
               {data.education?.map((edu) => (
-                <Box shadow="sm" key={crypto?.randomUUID.toString()}>
+                <Box my={"3"} shadow="sm" key={crypto?.randomUUID.toString()}>
                   <Heading as={"h3"} size="sm">
                     {edu.university}
                   </Heading>

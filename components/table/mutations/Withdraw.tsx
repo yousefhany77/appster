@@ -6,11 +6,17 @@ import {
   query,
   where,
 } from "firebase/firestore/lite";
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { db } from "../../../firebase";
 import { mutate } from "swr";
 import { useRouter } from "next/navigation";
-function Withdraw({ jobId, uid }: { jobId: string; uid: string }) {
+interface IWithdrawButton {
+  jobId: string;
+  uid: string;
+
+  disabled?: boolean;
+}
+function Withdraw({ jobId, uid, disabled }: IWithdrawButton) {
   const toast = useToast();
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
@@ -55,6 +61,7 @@ function Withdraw({ jobId, uid }: { jobId: string; uid: string }) {
       colorScheme={"red"}
       onClick={withdraw}
       isLoading={loading}
+      disabled={loading || disabled}
     >
       Withdraw
     </Button>

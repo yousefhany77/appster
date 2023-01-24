@@ -94,9 +94,13 @@ function JobApplicationsTable({ dataRows, columns }: ITable) {
                 })}
 
                 <Td>
-                  {row.status !== "rejected" && (
-                    <Withdraw jobId={row.jobPosting} uid={user.uid} />
-                  )}
+                  <Withdraw
+                    jobId={row.jobPosting}
+                    uid={user.uid}
+                    disabled={
+                      row.status === "accepted" || row.status === "rejected"
+                    }
+                  />
                 </Td>
               </Tr>
             ))

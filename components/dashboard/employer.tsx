@@ -17,6 +17,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore/lite";
+import millify from "millify";
 import moment from "moment";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -206,7 +207,10 @@ function EmployerDashboard() {
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaMoneyBill} color="teal.400" />
-                  {job.maxJobSalary}
+                  <Text>
+                    ${millify(+job.minJobSalary)} - $
+                    {millify(+job.maxJobSalary)}
+                  </Text>
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCode} color="teal.400" />

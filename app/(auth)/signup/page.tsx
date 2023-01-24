@@ -113,6 +113,8 @@ function SignupPage() {
         bg={bgForm}
         p={12}
         className=" w-full space-y-5 shadow-md rounded-xl"
+        border={"1px solid"}
+        borderColor={useColorModeValue("gray.200", "gray.700")}
       >
         <Heading mb={"8"} textAlign={"center"} size={"lg"}>
           Sign up
