@@ -1,7 +1,7 @@
 "use client";
 import { Container, Heading } from "@chakra-ui/react";
 import React from "react";
-import ProfileCarrer from "../../components/profile/ProfileCarrer";
+import Profilecareer from "../../components/profile/ProfileCareer";
 import ProfileEducation from "../../components/profile/ProfileEducation";
 import ProfilePersonalInfo from "../../components/profile/ProfilePersonalInfo";
 import useUser from "../../hooks/useUser";
@@ -22,9 +22,9 @@ function Profile() {
       </Heading>
       <ProfileEducation />
       <Heading my={"6"} size="md">
-        Carrer Experience
+        career Experience
       </Heading>
-      <ProfileCarrer />
+      <Profilecareer />
     </Container>
   );
 }

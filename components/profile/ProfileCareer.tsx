@@ -6,21 +6,21 @@ import { Box, Button, Spinner, VStack } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { deleteCareer } from "./Edit";
-const AppendCarrer = dynamic(
-  () => import("./Edit").then((mod) => mod.AppendCarrer),
+const Appendcareer = dynamic(
+  () => import("./Edit").then((mod) => mod.Appendcareer),
   {
     ssr: false,
     loading: () => <Spinner display={"block"} mx="auto" />,
   }
 );
-const UpdateCarrer = dynamic(
-  () => import("./Edit").then((mod) => mod.UpdateCarrer),
+const Updatecareer = dynamic(
+  () => import("./Edit").then((mod) => mod.Updatecareer),
   {
     ssr: false,
     loading: () => <Spinner display={"block"} mx="auto" />,
   }
 );
-function ProfileCarrer() {
+function Profilecareer() {
   const [edit, setEdit] = useState(false);
   const [update, setUpdate] = useState(false);
   const { user } = useUser();
@@ -68,7 +68,7 @@ function ProfileCarrer() {
               </p>
             </Box>
           ) : (
-            <UpdateCarrer
+            <Updatecareer
               setUpdate={setUpdate}
               key={index}
               index={index}
@@ -77,7 +77,7 @@ function ProfileCarrer() {
           )
         )}
       </VStack>
-      {edit && !update ? <AppendCarrer setEdit={setEdit} /> : null}
+      {edit && !update ? <Appendcareer setEdit={setEdit} /> : null}
       {
         <Button
           disabled={edit || update}
@@ -85,11 +85,11 @@ function ProfileCarrer() {
           colorScheme={"teal"}
           onClick={() => setEdit(true)}
         >
-          Add Carrer Experience <PlusSquareIcon mx={"2"} />
+          Add career Experience <PlusSquareIcon mx={"2"} />
         </Button>
       }
     </div>
   );
 }
 
-export default ProfileCarrer;
+export default Profilecareer;

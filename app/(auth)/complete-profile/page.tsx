@@ -169,6 +169,7 @@ function SignupPage() {
       }
     };
     user && checkIfProfileComplete(user.uid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return (
     <Center p={10}>
@@ -281,10 +282,7 @@ const SignupSchema = Yup.object().shape({
     .when("isStillWorking", {
       is: false,
       then: Yup.date()
-        .max(
-          new Date(),
-          "Cannot use future date"
-        )
+        .max(new Date(), "Cannot use future date")
         .min(Yup.ref("workedFrom"), "To date must be greater than from date")
         .required("Required"),
     }),

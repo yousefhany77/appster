@@ -512,7 +512,7 @@ const deleteCareer = async (uid: string, index: number) => {
   });
   mutate(`/profile/${uid}`);
 };
-function AppendCarrer({ setEdit }: { setEdit: (edit: boolean) => void }) {
+function Appendcareer({ setEdit }: { setEdit: (edit: boolean) => void }) {
   const { user } = useUser();
   const toast = useToast();
   const [isWorking, setIsWorking] = useState(false);
@@ -660,7 +660,7 @@ function AppendCarrer({ setEdit }: { setEdit: (edit: boolean) => void }) {
     </div>
   );
 }
-function UpdateCarrer({
+function Updatecareer({
   setUpdate,
   career,
   index,
@@ -830,7 +830,7 @@ export {
   AppendEducation,
   UpdateEducation,
   deleteEducation,
-  AppendCarrer,
-  UpdateCarrer,
+  Appendcareer,
+  Updatecareer,
   deleteCareer,
 };
