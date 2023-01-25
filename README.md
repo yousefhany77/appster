@@ -6,7 +6,7 @@ Appster is a job portal that focuses exclusively on technology-related job posti
 - Firebase for authentication and Firestore for the database
 - Firebase Storage for storing resumes for each user
 - Algolia for search capabilities
-- Tailwend CSS
+- Tailwind CSS
  ## **Features**
 - Advanced search and autocomplete capabilities with Algolia
 - User-friendly design with clean, simple and easy to navigate interface
