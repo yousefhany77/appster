@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# **Introduction**
+Appster is a job portal that focuses exclusively on technology-related job postings. It allows companies to post job openings and review job applications, and it allows job seekers to search and apply for jobs.
 
-## Getting Started
+### **Tech Stack**
+- React.js with Next.js for building the UI with Chakra UI
+- Firebase for authentication and Firestore for the database
+- Firebase Storage for storing resumes for each user
+- Algolia for search capabilities
+- Tailwend CSS
+ ## **Features**
+- Advanced search and autocomplete capabilities with Algolia
+- User-friendly design with clean, simple and easy to navigate interface
+- Companies can post job postings, review other job postings and see all the jobs postings they have posted
+- Companies can view the applicants for each job posting, review their applications, and accept or reject them
+- Companies are able to sort the job postings by the number of applicants
+- Companies can schedule an interview with the candidates
+- Job seekers can apply and search for jobs posted and review all their applications, and withdraw the application if the application status is not rejected or accepted
+- Job seekers can update their profile, add new education experiences and append career experience
+- Email would be sent to the candidate on any status changes
 
-First, run the development server:
+### **Try it Out**
+ You can try out Appster by using the following demo accounts:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+**Company**:
+Email: abc@email.com
+Password: 123456789
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Employee**:
+Email: demo@email.com
+Password: 123456789
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Future Additions**
+More sorting options and filters
+Companies can add his custom email template for each state
+Add more pages and features
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### **Conclusion**
+Appster is a powerful platform that can streamline the job search process for both companies and employees in the tech field. With its advanced search capabilities, user-friendly design, and easy navigation, it makes it easy to find the perfect job or candidate. Give it a try today and experience the difference that a tech-focused job portal can make.
