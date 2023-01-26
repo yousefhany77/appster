@@ -103,10 +103,10 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <InstantSearch searchClient={searchClient} indexName="job_postings">
       {/* searchbar with auto complete */}
-      <SearchBox />
       {/* Filters */}
       {currentView === "desktop" && (
         <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
+          <SearchBox />
           <Flex
             wrap={"wrap"}
             alignItems="center"
@@ -204,6 +204,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <Container p="5">
           {layoutSegments.length === 0 && (
             <>
+              <SearchBox />
               <Container p={"5"} maxW="container.lg" mx={"auto"} as="div">
                 <Flex
                   wrap={"wrap"}
