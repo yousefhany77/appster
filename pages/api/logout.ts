@@ -1,11 +1,11 @@
-import { deleteCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  deleteCookie('session', {
+  setCookie('session', "", {
     req,
     res,
-    maxAge: 0,
+    maxAge: -1,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: true,
