@@ -26,7 +26,7 @@ Email: abc@email.com
 Password: 123456789
 
 **Employee**:
-Email: demo@email.com
+Email: employee@gmail.com
 Password: 123456789
 
 ### **Future Additions**
