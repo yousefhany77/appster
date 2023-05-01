@@ -1,12 +1,12 @@
-import { clientAuth } from "../firebase";
+import { clientAuth } from '../firebase';
 
 async function logout() {
   try {
-    await fetch("/api/logout");
+    await fetch('/api/logout');
     await clientAuth.signOut();
-    window.location.replace("/");
+    window.location.replace('/');
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
