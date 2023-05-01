@@ -1,16 +1,18 @@
-import { setCookie } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  setCookie('session', "", {
+  res.setHeader('Set-Cookie', 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
+  deleteCookie('session', {
     req,
     res,
-    maxAge: -1,
+    expires: new Date(0),
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: true,
     path: '/',
   });
+
   console.log('Logged out');
-  res.status(200).json({ message: 'Logged out' });
+  res.writeHead(302, { Location: '/' });
+  res.end();
 }
