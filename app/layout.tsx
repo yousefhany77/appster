@@ -1,24 +1,20 @@
-import "./globals.css";
-import { Roboto } from "@next/font/google";
-import Providers from "../providers/providers";
-import { cookies } from "next/headers";
-import NavBar from "../components/NavBar";
+import { Roboto } from '@next/font/google';
+import { cookies } from 'next/headers';
+import NavBar from '../components/NavBar';
+import Providers from '../providers/providers';
+import './globals.css';
 
 const robato = Roboto({
-  weight: ["100", "300", "400", "500", "700", "900"],
-  subsets: ["latin-ext"],
+  weight: ['100', '300', '400', '500', '700', '900'],
+  subsets: ['latin'],
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const nextCookies = cookies();
-  const theme = nextCookies.get("chakra-ui-color-mode")?.value;
+  const theme = nextCookies.get('chakra-ui-color-mode')?.value;
   return (
-    <html lang="en" className={robato.className}>
-      <body>
+    <html lang="en">
+      <body className={robato.className}>
         <Providers cookie={theme}>
           {/* @ts-expect-error Server Component */}
 

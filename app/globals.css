@@ -6,6 +6,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Roboto, sans-serif !important;
 }
 .ql-container {
   min-height: 10rem !important;
@@ -104,7 +105,6 @@
 .ais-Dropdown.ais-Panel {
   flex: 1;
 }
-
 
 table th:first-child {
   /* border-radius = top left, top right, bottom right, bottom left */
